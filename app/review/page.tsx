@@ -1,15 +1,26 @@
 // app/review/page.tsx (Reviewer)
 "use client";
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 import React, { useMemo, useState } from "react";
-import * as pdfjsLib from "pdfjs-dist";
-(pdfjsLib as any).GlobalWorkerOptions.workerSrc = new URL(
-  "pdfjs-dist/build/pdf.worker.min.mjs",
-  import.meta.url
-).toString();
+// Remove: import * as pdfjsLib from "pdfjs-dist";
+
+let _pdfjs: any = null;
+async function getPdfjs() {
+  if (_pdfjs) return _pdfjs;
+  const mod: any = await import("pdfjs-dist");               // loads only in browser
+  mod.GlobalWorkerOptions.workerSrc = new URL(
+    "pdfjs-dist/build/pdf.worker.min.mjs",
+    import.meta.url
+  ).toString();
+  _pdfjs = mod;
+  return _pdfjs;
+}
 
 async function extractFromPDF(file: File): Promise<string> {
+  const pdfjsLib = await getPdfjs();                          // <-- use here
   const buf = await file.arrayBuffer();
-  const pdf = await (pdfjsLib as any).getDocument({ data: buf }).promise;
+  const pdf = await pdfjsLib.getDocument({ data: buf }).promise;
   let text = "";
   for (let p = 1; p <= pdf.numPages; p++) {
     const page = await pdf.getPage(p);
@@ -18,6 +29,7 @@ async function extractFromPDF(file: File): Promise<string> {
   }
   return text;
 }
+
 
 async function extractFromDOCX(file: File): Promise<string> {
   const buf = await file.arrayBuffer();
