@@ -15,7 +15,7 @@ export default function Home() {
           </h1>
           <p className="mt-5 text-slate-300 text-lg md:pr-8">
             Upload your resume (PDF / DOCX / TXT) and get concise, actionable feedback
-            powered by your local <span className="font-semibold">Ollama</span> models.
+            powered by Our <span className="font-semibold">Smart LLM</span> models.
             We highlight keyword gaps, rewrite bullets, and score ATS-readiness.
           </p>
 
@@ -33,12 +33,6 @@ export default function Home() {
             >
               Go to Reviewer
             </Link>
-            <a
-              href="#why-ollama"
-              className="text-slate-300 underline-offset-4 hover:underline"
-            >
-              Why Ollama?
-            </a>
           </div>
         </div>
 
